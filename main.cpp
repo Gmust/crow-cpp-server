@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -15,6 +16,43 @@ void setConsoleColor(WORD color) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, color);
 }
+
+vector<Todo> readTodosFromFile() {
+    std::vector<Todo> todos;
+    std::ifstream file("todos.txt");
+    if (!file.is_open()) {
+        setConsoleColor(FOREGROUND_RED);
+        cout << "Unable to open file: todos.txt" << endl;
+        setConsoleColor(FOREGROUND_INTENSITY);
+    }
+
+    string line;
+    while (getline(file, line)) {
+        istringstream iss(line);
+        string task, statusStr;
+
+        if (!(iss >> quoted(task))) {
+            setConsoleColor(FOREGROUND_RED);
+            cout << "Error parsing task in the file" << endl;
+            setConsoleColor(FOREGROUND_INTENSITY);
+        }
+
+        if (!(iss >> statusStr)) {
+            setConsoleColor(FOREGROUND_RED);
+            cout << "Error parsing status in the file" << endl;
+            setConsoleColor(FOREGROUND_INTENSITY);
+        }
+
+        Todo todo;
+
+        todo.task = task;
+        todo.status = (statusStr == "0") ? "Incomplete" : "Complete";
+        todos.push_back(todo);
+    }
+
+    return todos;
+}
+
 
 int main() {
 
@@ -30,17 +68,16 @@ int main() {
                     ([](const crow::request &req) {
                         auto json = crow::json::load(req.body);
                         if (!json) {
-                            // Print error message in red
                             setConsoleColor(FOREGROUND_RED);
                             std::cout << "Error: Invalid JSON" << std::endl;
-                            setConsoleColor(FOREGROUND_INTENSITY); // Reset color to default
+                            setConsoleColor(FOREGROUND_INTENSITY);
                             return crow::response(400, "Invalid JSON");
                         }
 
                         Todo todo;
 
                         todo.task = json["task"].s();
-                        todo.task = json["task"].s();
+                        todo.status = json["status"].b();
 
                         ofstream file("todos.txt", ios::app);
                         if (file.is_open()) {
@@ -56,6 +93,22 @@ int main() {
                         }
                     });
 
+    CROW_ROUTE(app, "/get-todos")
+            .methods("GET"_method)
+                    ([]() {
+                        std::vector<Todo> todos = readTodosFromFile();
+
+                        crow::json::wvalue::list todosResponse;
+                        for (const auto &todo : todos) {
+                            crow::json::wvalue todoJson;
+                            todoJson["task"] = todo.task;
+                            todoJson["status"] = todo.status;
+                            todosResponse.push_back(todoJson);
+                        }
+
+                        crow::json::wvalue jsonResponse = crow::json::wvalue(todosResponse);
+                        return crow::response(jsonResponse);
+                    });
     app.port(18080).multithreaded().run();
     return 0;
 }
