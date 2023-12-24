@@ -27,3 +27,5 @@ void setConsoleColor(WORD color);
 vector<Todo> readTodosFromFile();
 
 crow::response jsonError();
+
+crow::response updateTodosFile(vector<Todo> todos);

@@ -100,14 +100,13 @@ crow::response changeTodoStatus(const crow::request &req) {
     });
 
     if (existingTodo != todos.end()) {
-        // Retain the existing task value
         string existingTask = existingTodo->task;
 
         existingTodo->status = todoStatus;
 
         ofstream file("todos.txt", ios::trunc);
         if (file.is_open()) {
-            for (const auto &todo : todos) {
+            for (const auto &todo: todos) {
                 file << quoted(todo.id) << " " << quoted(todo.task) << " " << todo.status << endl;
             }
             file.close();
@@ -120,6 +119,52 @@ crow::response changeTodoStatus(const crow::request &req) {
             cout << "Error: Failed to open todo file" << endl;
             setConsoleColor(FOREGROUND_INTENSITY);
             return {500, "Failed to update todo status"};
+        }
+    } else {
+        setConsoleColor(FOREGROUND_RED);
+        cout << "Error: Todo not found with that ID:" << todoId << endl;
+        setConsoleColor(FOREGROUND_INTENSITY);
+        return {404, "Not found"};
+    }
+}
+
+
+crow::response changeTodoTask(const crow::request &req) {
+
+    auto json = crow::json::load(req.body);
+    if (!json) {
+        return jsonError();
+    }
+
+    string todoId = json["id"].s();
+    string newTodoTask = json["task"].s();
+
+    vector<Todo> todos = readTodosFromFile();
+
+    auto existingTodo = find_if(todos.begin(), todos.end(), [todoId](const Todo &todo) {
+        return todo.id == todoId;
+    });
+
+    if (existingTodo != todos.end()) {
+        existingTodo->task = newTodoTask ;
+
+        existingTodo->status = existingTodo -> status;
+
+        ofstream file("todos.txt", ios::trunc);
+        if (file.is_open()) {
+            for (const auto &todo: todos) {
+                file << quoted(todo.id) << " " << quoted(todo.task) << " " << todo.status << endl;
+            }
+            file.close();
+            setConsoleColor(FOREGROUND_GREEN);
+            cout << "TODO  updated successfully: " << todoId << endl;
+            setConsoleColor(FOREGROUND_INTENSITY);
+            return {200, "TODO  updated successfully"};
+        } else {
+            setConsoleColor(FOREGROUND_RED);
+            cout << "Error: Failed to open todo file" << endl;
+            setConsoleColor(FOREGROUND_INTENSITY);
+            return {500, "Failed to update  status"};
         }
     } else {
         setConsoleColor(FOREGROUND_RED);
