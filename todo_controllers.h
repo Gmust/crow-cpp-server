@@ -6,3 +6,4 @@
 crow::response addTodoController(const crow::request &req);
 crow::response getTodosController();
 crow::response deleteTodoController(const crow::request &req);
+crow::response changeTodoStatus(const crow::request &req);
