@@ -4,7 +4,7 @@
 using namespace std;
 
 string generateId(int id_length) {
-    static  char signs[] =
+    static char signs[] =
             "0123456789"
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             "abcdefghijklmnopqrstuvwxyz";
@@ -59,3 +59,9 @@ vector<Todo> readTodosFromFile() {
     return todos;
 }
 
+crow::response jsonError() {
+    setConsoleColor(FOREGROUND_RED);
+    std::cout << "Error: Invalid JSON" << std::endl;
+    setConsoleColor(FOREGROUND_INTENSITY);
+    return crow::response(400, "Invalid JSON");
+}

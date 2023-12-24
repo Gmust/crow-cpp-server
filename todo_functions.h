@@ -1,5 +1,6 @@
 #pragma once
 
+#include "crow.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -8,8 +9,8 @@
 #include <ctime>
 #include <cstdlib>
 #include <chrono>
-#include <windows.h>
 #include <minwindef.h>
+#include <windows.h>
 
 using namespace std;
 
@@ -24,3 +25,5 @@ string generateId(int id_length);
 void setConsoleColor(WORD color);
 
 vector<Todo> readTodosFromFile();
+
+crow::response jsonError();

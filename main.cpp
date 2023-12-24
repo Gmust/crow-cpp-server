@@ -20,6 +20,9 @@ int main() {
     CROW_ROUTE(app, "/get-todos")
             .methods("GET"_method)(getTodosController);
 
+    CROW_ROUTE(app, "/delete-todo")
+            .methods("DELETE"_method)(deleteTodoController);
+
     setConsoleColor(FOREGROUND_GREEN);
     cout << "Server launched successfully!" << endl;
     setConsoleColor(FOREGROUND_INTENSITY);
