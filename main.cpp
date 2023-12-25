@@ -10,7 +10,7 @@ int main() {
     crow::SimpleApp app;
 
     CROW_ROUTE(app, "/")([]() {
-        auto page = crow::mustache::load_text("homepage.html");
+        auto page = crow::mustache::load_text_unsafe("homepage.html");
         return page;
     });
 

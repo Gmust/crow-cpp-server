@@ -1,2 +1,10 @@
 # Project exclude paths
-/cmake-build-debug/
+/cmake-build-debug/.cmake
+/cmake-build-debug/CMakeFiles
+/cmake-build-debug/Testing
+/cmake-build-debug/.ninja_deps
+/cmake-build-debug/.ninja_log
+/cmake-build-debug/cmake_install.cmake
+/cmake-build-debug/CMakeCache.txt
+/cmake-build-debug/webserver.exe
+/cmake-build-debug/todos.txt
