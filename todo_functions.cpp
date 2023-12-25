@@ -28,8 +28,8 @@ void setConsoleColor(WORD color) {
     SetConsoleTextAttribute(hConsole, color);
 }
 
-vector <Todo> readTodosFromFile() {
-    vector <Todo> todos;
+vector<Todo> readTodosFromFile() {
+    vector<Todo> todos;
     ifstream file("todos.txt");
     if (!file.is_open()) {
         setConsoleColor(FOREGROUND_RED);
@@ -63,24 +63,12 @@ crow::response jsonError() {
     setConsoleColor(FOREGROUND_RED);
     std::cout << "Error: Invalid JSON" << std::endl;
     setConsoleColor(FOREGROUND_INTENSITY);
-    return crow::response(400, "Invalid JSON");
+    return {400, "Invalid JSON"};
 }
 
-crow::response updateTodosFile(vector <Todo> todos) {
-    ofstream file("todos.txt", ios::trunc);
-    if (file.is_open()) {
-        for (const auto &todo: todos) {
-            file << quoted(todo.id) << " " << quoted(todo.task) << " " << todo.status << endl;
-        }
-        file.close();
-        setConsoleColor(FOREGROUND_GREEN);
-        cout << "TODO  updated successfully! " << endl;
-        setConsoleColor(FOREGROUND_INTENSITY);
-        return {200, "TODO updated successfully"};
-    } else {
-        setConsoleColor(FOREGROUND_RED);
-        cout << "Error: Failed to open todo file" << endl;
-        setConsoleColor(FOREGROUND_INTENSITY);
-        return {500, "Failed to update todo"};
-    }
+crow::response todoNotFoundError(const string todoId) {
+    setConsoleColor(FOREGROUND_RED);
+    cout << "Error: Todo not found with that ID:" << todoId << endl;
+    setConsoleColor(FOREGROUND_INTENSITY);
+    return crow::response(404, "Not found");
 }

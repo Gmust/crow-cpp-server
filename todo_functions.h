@@ -28,4 +28,7 @@ vector<Todo> readTodosFromFile();
 
 crow::response jsonError();
 
+crow::response todoNotFoundError(string todoId);
+
 crow::response updateTodosFile(vector<Todo> todos);
+

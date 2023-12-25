@@ -1,6 +1,8 @@
 #include "todo_controllers.h"
 
 
+crow::response todoNotFoundError();
+
 crow::response addTodoController(const crow::request &req) {
     auto json = crow::json::load(req.body);
     if (!json) {
@@ -130,7 +132,6 @@ crow::response changeTodoStatus(const crow::request &req) {
 
 
 crow::response changeTodoTask(const crow::request &req) {
-
     auto json = crow::json::load(req.body);
     if (!json) {
         return jsonError();
@@ -146,9 +147,9 @@ crow::response changeTodoTask(const crow::request &req) {
     });
 
     if (existingTodo != todos.end()) {
-        existingTodo->task = newTodoTask ;
+        existingTodo->task = newTodoTask;
 
-        existingTodo->status = existingTodo -> status;
+        existingTodo->status = existingTodo->status;
 
         ofstream file("todos.txt", ios::trunc);
         if (file.is_open()) {
@@ -167,9 +168,25 @@ crow::response changeTodoTask(const crow::request &req) {
             return {500, "Failed to update  status"};
         }
     } else {
-        setConsoleColor(FOREGROUND_RED);
-        cout << "Error: Todo not found with that ID:" << todoId << endl;
-        setConsoleColor(FOREGROUND_INTENSITY);
-        return {404, "Not found"};
+        return todoNotFoundError(todoId);
+    }
+}
+
+crow::response getTodoInfo(const string& id) {
+
+    vector<Todo> todos = readTodosFromFile();
+    auto todo = find_if(todos.begin(), todos.end(), [id](const Todo &todo) {
+        return todo.id == id;
+    });
+
+    if (todo != todos.end()) {
+        crow::json::wvalue todoJson;
+        todoJson["id"] = todo->id;
+        todoJson["task"] = todo->task;
+        todoJson["status"] = todo->status;
+        crow::json::wvalue jsonResponse = crow::json::wvalue(todoJson);
+        return {200, jsonResponse};
+    } else {
+        return todoNotFoundError(id);
     }
 }

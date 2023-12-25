@@ -8,3 +8,4 @@ crow::response getTodosController();
 crow::response deleteTodoController(const crow::request &req);
 crow::response changeTodoStatus(const crow::request &req);
 crow::response changeTodoTask(const crow::request &req);
+crow::response getTodoInfo(const string &id);

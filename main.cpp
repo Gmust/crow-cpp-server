@@ -29,6 +29,11 @@ int main() {
     CROW_ROUTE(app, "/update-todo-task")
             .methods("PUT"_method)(changeTodoTask);
 
+    CROW_ROUTE(app, "/get-todo-info/<string>")
+            .methods("GET"_method)([](const string id) {
+                return getTodoInfo(id);
+            });
+
     setConsoleColor(FOREGROUND_GREEN);
     cout << "Server launched successfully!" << endl;
     setConsoleColor(FOREGROUND_INTENSITY);
