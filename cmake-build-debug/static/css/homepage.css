@@ -1,0 +1,203 @@
+.wrapper {
+    max-height: 100vh;
+    max-width: 100vw;
+    background: black;
+    color: white;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 24px;
+    line-height: 24px;
+    margin: 0 0 24px;
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.container {
+    width: 100%;
+    flex-direction: column;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+}
+
+h1 {
+    font-size: 82px;
+    text-shadow: 0 0 5px #ffa500, 0 0 15px #ffa500, 0 0 20px #ffa500, 0 0 40px #ffa500, 0 0 60px #ff0000, 0 0 10px #ff8d00, 0 0 98px #ff0000;
+    color: #fff6a9;
+    font-family: "Sacramento", cursive;
+    text-align: center;
+    animation: blink 12s infinite;
+    -webkit-animation: blink 12s infinite;
+    padding: 20px;
+}
+
+@keyframes blink {
+    20%,
+    24%,
+    55% {
+        color: #111;
+        text-shadow: none;
+    }
+
+    0%,
+    19%,
+    21%,
+    23%,
+    25%,
+    54%,
+    56%,
+    100% {
+        text-shadow: 0 0 5px #ffa500, 0 0 15px #ffa500, 0 0 20px #ffa500, 0 0 40px #ffa500, 0 0 60px #ff0000, 0 0 10px #ff8d00, 0 0 98px #ff0000;
+        color: #fff6a9;
+    }
+}
+
+.form-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-wrapper label {
+    font-size: 28px;
+}
+
+.task-input {
+    padding: 10px;
+    margin: 20px;
+    box-sizing: border-box;
+    color: white;
+    font-size: 24px;
+    background-color: inherit;
+    border: 1px solid #ffcc00;
+    font-family: 'Orbitron', sans-serif;
+    outline: none;
+}
+
+.task-input:focus {
+    border-color: #ffcc00;
+    box-shadow: 0 0 5px rgba(255, 242, 0, 0.8);
+}
+
+.add-todo-btn {
+    padding: 10px;
+    cursor: pointer;
+    background: inherit;
+    font-size: 24px;
+    border-radius: 16px;
+    color: white;
+    border: 1px solid darkgoldenrod;
+    transition: transform 100ms ease-in-out;
+}
+
+.add-todo-btn:hover {
+    transform: scale(1.1);
+    background: #b86d0b;
+}
+
+.error {
+    color: red;
+    font-size: 24px;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    color: white;
+}
+
+.task-item p {
+    margin-left: 10px;
+}
+
+.icon-style {
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.icon-style:hover {
+    transform: scale(1.1);
+}
+
+.fa-trash:hover {
+    color: red;
+}
+
+.fa-pen:hover {
+    color: green;
+}
+
+.icons-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 20px;
+    width: 60px;
+}
+
+
+.snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+}
+
+.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}

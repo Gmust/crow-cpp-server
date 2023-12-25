@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Todos</title>
+    <link rel="stylesheet" href="static/css/homepage.css">
+</head>
+<body class="wrapper">
+<div class="container">
+    <h1 class="">Todos</h1>
+
+    <form id="todoForm" class="form-wrapper">
+        <label for="task">New Task:</label>
+        <input type="text" id="task" name="task" required class="task-input">
+        <input type="submit" value="Add Task" class="add-todo-btn">
+    </form>
+
+    <ul id="taskList">
+    </ul>
+
+    <p id="error" class="error"></p>
+
+    <div id="editTodo" style="display: none;">
+        <h2>Edit Todo</h2>
+        <form id="editTodoForm">
+            <label for="editTask">Edit Task:</label>
+            <input type="text" id="editTask" name="editTask" required class="task-input">
+            <input type="submit" value="Save Changes" class="add-todo-btn">
+        </form>
+    </div>
+
+    <div class="snackbar" id="snackbar">...</div>
+</div>
+
+<script src="https://kit.fontawesome.com/2ccdb35384.js" crossorigin="anonymous"></script>
+<script src="static/js/index.js"></script>
+
+</body>
+</html>
