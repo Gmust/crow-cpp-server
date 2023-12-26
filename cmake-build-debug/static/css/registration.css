@@ -1,0 +1,100 @@
+
+body {
+    font-family: 'Helvetica Neue', sans-serif;
+    background-color: black;
+    color: white;
+    margin: 0;
+    font-size: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+
+.registration-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid #ffcc00;
+    border-radius: 16px;
+    padding: 25px;
+}
+
+.username-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.username-wrapper label {
+    margin-right: 10px;
+}
+
+.username-wrapper input {
+    font-size: 20px;
+    border: 2px solid #ffae00;
+    background: #413f3f;
+    color: white;
+}
+
+
+.password-wrapper {
+    display: flex;
+    flex-direction: row;
+    margin-top: 30px;
+}
+
+.password-wrapper label {
+    margin-right: 18px;
+}
+
+.password-wrapper input {
+    font-size: 20px;
+    border: 2px solid #ffae00;
+    background: #413f3f;
+    color: white;
+}
+
+.submit-wrapper {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.submit-wrapper button {
+    padding: 10px;
+    font-size: 30px;
+    background: inherit;
+    color: white;
+    border: 2px solid darkgoldenrod;
+    cursor: pointer;
+    border-radius: 14px;
+    transition: ease-in-out;
+    transition-duration: 200ms;
+}
+
+.submit-wrapper button:hover {
+    transform: scale(1.1);
+    background: #ffcc00;
+    color: black;
+}
+
+.registration-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.success {
+    color: green;
+    font-weight: bold;
+    font-size: 14px;
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="static/css/registration.css">
+</head>
+<body>
+<div class="registration-wrapper">
+    <h1>Registration</h1>
+    <form id="registration-form" class="registration-form">
+        <div class="username-wrapper">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <p id="username-error" class="error"></p>
+        <div class="password-wrapper">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <p id="password-error" class="error"></p>
+        <div class="password-wrapper">
+            <label for="repeat-password">Repeat password:</label>
+            <input type="password" id="repeat-password" name="repeat-password" required>
+        </div>
+        <p id="repeat-password-error" class="error"></p>
+        <div class="submit-wrapper">
+            <button type="submit">Sign up</button>
+            <div id="success-message" class="success"></div>
+            <p id="error" class="error"></p>
+            <p>Already have an account?<a href="/">Log in!</a></p>
+        </div>
+    </form>
+</div>
+<script src="static/js/registration.js"></script>
+</body>
+</html>
