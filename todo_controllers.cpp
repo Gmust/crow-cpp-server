@@ -175,7 +175,7 @@ crow::response changeTodoTask(const crow::request &req) {
     }
 }
 
-crow::response getTodoInfo( string id, const crow::request &req) {
+crow::response getTodoInfo(string id, const crow::request &req) {
     auto json = crow::json::load(req.body);
 
     vector<Todo> todos = readTodosFromFile(json["username"].s());
@@ -195,7 +195,7 @@ crow::response getTodoInfo( string id, const crow::request &req) {
     }
 }
 
-crow::response loginUser(crow::request req) {
+crow::response loginUser(const crow::request &req) {
     string authHeader = req.get_header_value("Authorization");
     string userCredits = authHeader.substr(6);
     string decodedUserCredits = crow::utility::base64decode(userCredits, userCredits.size());
@@ -229,3 +229,42 @@ crow::response loginUser(crow::request req) {
         return crow::response(401, "Invalid credentials");
     }
 }
+
+crow::response registerUser(const crow::request &req) {
+    auto json = crow::json::load(req.body);
+
+    if (!json) {
+        jsonError();
+    }
+
+    string username = json["username"].s();
+    string password = json["password"].s();
+    string userId = generateId(10);
+
+    string userPath = "users";
+
+    if (username.size() < 0 || password.size() < 0) {
+        setConsoleColor(FOREGROUND_RED);
+        cout << "Provide username and password!" << endl;
+        setConsoleColor(FOREGROUND_INTENSITY);
+
+        return {400, "Provide username and password!"};
+    }
+
+    if (!isUsernameAvailable(username, userPath)) {
+
+        setConsoleColor(FOREGROUND_RED);
+        cout << "Username is not available" << endl;
+        setConsoleColor(FOREGROUND_INTENSITY);
+
+        return {400, "Username is not available"};
+    }
+
+    string strToEncode = username + ':' + password;
+    string encodedInfo = crow::utility::base64encode(strToEncode, strToEncode.size());
+
+    createNewUser(userPath, username, encodedInfo, userId);
+
+    return {200, "New user successfully registered"};
+}
+

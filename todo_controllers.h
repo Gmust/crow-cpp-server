@@ -4,6 +4,7 @@
 #include "todo_functions.h"
 #include <fstream>
 #include <sstream>
+#include <filesystem>
 
 
 crow::response addTodoController(const crow::request &req);
@@ -18,4 +19,6 @@ crow::response changeTodoTask(const crow::request &req);
 
 crow::response getTodoInfo(string id, const crow::request &req);
 
-crow::response loginUser(crow::request req);
+crow::response loginUser(const crow::request &req);
+
+crow::response registerUser(const crow::request &req);

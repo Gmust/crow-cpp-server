@@ -14,6 +14,9 @@ int main() {
         return page;
     });
 
+    CROW_ROUTE(app, "/signup")
+            .methods("POST"_method)(registerUser);
+
     CROW_ROUTE(app, "/login")
             .methods("POST"_method)(loginUser);
 

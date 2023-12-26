@@ -24,10 +24,14 @@ string generateId(int id_length);
 
 void setConsoleColor(WORD color);
 
-vector<Todo> readTodosFromFile(const string& username);
+vector<Todo> readTodosFromFile(const string &username);
 
 crow::response jsonError();
 
 crow::response todoNotFoundError(string todoId);
 
-pair<string, string> separateString(const string& str, char delimiter);
+pair<string, string> separateString(const string &str, char delimiter);
+
+bool isUsernameAvailable(const string &username, const string &path);
+
+void createNewUser(const string &usersPath, string &username, string &encodedData, string &userId);

@@ -1,7 +1,9 @@
 #include "todo_functions.h"
 #include <iomanip>
+#include <filesystem>
 
 using namespace std;
+namespace fs = std::filesystem;
 
 string generateId(int id_length) {
     static char signs[] =
@@ -28,7 +30,7 @@ void setConsoleColor(WORD color) {
     SetConsoleTextAttribute(hConsole, color);
 }
 
-vector<Todo> readTodosFromFile(const string& username) {
+vector<Todo> readTodosFromFile(const string &username) {
     vector<Todo> todos;
     ifstream file("users/" + username + "/todos.txt");
     if (!file.is_open()) {
@@ -76,4 +78,31 @@ crow::response todoNotFoundError(const string todoId) {
 pair<string, string> separateString(const string &str, char delimiter) {
     size_t found = str.find(delimiter);
     return {str.substr(0, found), str.substr(found + 1)};
+}
+
+bool isUsernameAvailable(const std::string &username, const std::string &path) {
+    for (const auto &entry: fs::directory_iterator(path)) {
+        if (entry.is_directory() && entry.path().filename() == username) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void createNewUser(const string &usersPath, string &username, string &encodedData, string &userId) {
+    fs::create_directory(usersPath + "/" + username);
+
+    ofstream infoFile(usersPath + "/" + username + "/info.txt");
+    ofstream todosFile(usersPath + "/" + username + "/todos.txt");
+
+    if (infoFile.is_open()) {
+        infoFile << userId << endl;
+        infoFile << encodedData << endl;
+    } else {
+        setConsoleColor(FOREGROUND_RED);
+        cout << "Unable to open file!" << endl;
+        setConsoleColor(FOREGROUND_INTENSITY);
+    }
+
+    infoFile.close();
 }
