@@ -32,7 +32,7 @@ crow::response addTodoController(const crow::request &req) {
     }
 }
 
-crow::response getTodosController(crow::request &req) {
+crow::response getTodosController(const crow::request &req) {
 
     auto json = crow::json::load(req.body);
     std::vector<Todo> todos = readTodosFromFile(json["username"].s());
@@ -175,7 +175,7 @@ crow::response changeTodoTask(const crow::request &req) {
     }
 }
 
-crow::response getTodoInfo(const string &id, crow::request &req) {
+crow::response getTodoInfo( string id, const crow::request &req) {
     auto json = crow::json::load(req.body);
 
     vector<Todo> todos = readTodosFromFile(json["username"].s());
@@ -224,8 +224,8 @@ crow::response loginUser(crow::request req) {
         userJson["username"] = storedUsername;
         userJson["message"] = "Authentificated";
 
-        crow::response(200, userJson);
+        return crow::response(200, userJson);
     } else {
-        crow::response(401, "Invalid credentials");
+        return crow::response(401, "Invalid credentials");
     }
 }
