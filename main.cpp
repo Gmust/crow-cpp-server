@@ -10,7 +10,26 @@ int main() {
     crow::SimpleApp app;
 
     CROW_ROUTE(app, "/")([]() {
-        auto page = crow::mustache::load_text_unsafe("homepage.html");
+        auto page = crow::mustache::load_text("login.html");
+        return page;
+    });
+
+    CROW_ROUTE(app, "/login")
+            .methods("POST"_method)(loginUser);
+
+    CROW_ROUTE(app, "/registration")([]() {
+        auto page = crow::mustache::load_text("registration.html");
+        return page;
+    });
+
+
+    CROW_ROUTE(app, "/error")([]() {
+        auto page = crow::mustache::load_text("error.html");
+        return page;
+    });
+
+    CROW_ROUTE(app, "/home")([]() {
+        auto page = crow::mustache::load_text("homepage.html");
         return page;
     });
 
@@ -30,8 +49,8 @@ int main() {
             .methods("PUT"_method)(changeTodoTask);
 
     CROW_ROUTE(app, "/get-todo-info/<string>")
-            .methods("GET"_method)([](const string id) {
-                return getTodoInfo(id);
+            ([](const crow::request &req, crow::response &res, const std::string &id) {
+                getTodoInfo(id, req);
             });
 
     setConsoleColor(FOREGROUND_GREEN);

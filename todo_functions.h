@@ -24,11 +24,10 @@ string generateId(int id_length);
 
 void setConsoleColor(WORD color);
 
-vector<Todo> readTodosFromFile();
+vector<Todo> readTodosFromFile(const string& username);
 
 crow::response jsonError();
 
 crow::response todoNotFoundError(string todoId);
 
-crow::response updateTodosFile(vector<Todo> todos);
-
+pair<string, string> separateString(const string& str, char delimiter);
