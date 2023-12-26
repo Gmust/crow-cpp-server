@@ -31,7 +31,6 @@ const updateTodoTask = async () => {
     const errorElement = document.getElementById('error');
     errorElement.textContent = '';
     const id = document.getElementById('editTodoForm').getAttribute('data-id');
-    console.log(id, taskInput.value);
 
     const data = {
         id: id,
