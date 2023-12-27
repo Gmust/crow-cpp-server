@@ -218,3 +218,7 @@ h1 {
 .quit-button:hover {
     background-color: #945b0d;
 }
+
+.checked {
+    text-decoration: line-through;
+}

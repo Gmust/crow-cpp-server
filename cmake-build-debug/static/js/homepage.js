@@ -130,10 +130,11 @@ const fetchTodos = async () => {
         `<li class="task-item">
                  <input
                   type="checkbox" ${todo.status ? 'checked' : ''}
-                   id="checkbox-${todo.id}"
-                   onChange="updateTodoStatus('${todo.id}')"
+                  id="checkbox-${todo.id}"
+                  onChange="updateTodoStatus('${todo.id}')"
+                  class="${todo.status ? 'checked' : ''}"
                  />
-                 <p>${todo.task}</p>
+                 <p class="${todo.status ? "checked" : ""}">${todo.task}</p>
                  <div class="icons-wrapper">
                     <i class="fa-solid fa-trash icon-style" id={todo.id} onClick="deleteTodo('${todo.id}')"></i>
                     <i class="fa-solid fa-pen icon-style" onclick="makeTaskEditable('${todo.id}')"></i>
