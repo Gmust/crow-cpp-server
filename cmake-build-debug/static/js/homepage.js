@@ -194,4 +194,14 @@ const showSnackbar = (message) => {
     }, 3000);
 }
 
+const quit = () => {
+    localStorage.clear();
+    window.location.href = '/';
+}
+
+document.getElementById('quitButton').addEventListener('click', quit);
+
+
 fetchTodos();
+
+
