@@ -85,3 +85,15 @@ body {
     flex-direction: column;
     align-items: center;
 }
+
+.error {
+    margin-top: 10px;
+    color: red;
+    font-weight: bold;
+}
+
+.success {
+    margin-top: 10px;
+    color: green;
+    font-weight: bold;
+}

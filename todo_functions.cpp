@@ -33,6 +33,7 @@ void setConsoleColor(WORD color) {
 vector<Todo> readTodosFromFile(const string &username) {
     vector<Todo> todos;
     ifstream file("users/" + username + "/todos.txt");
+
     if (!file.is_open()) {
         setConsoleColor(FOREGROUND_RED);
         cout << "Unable to open file: todos.txt" << endl;
@@ -72,7 +73,7 @@ crow::response todoNotFoundError(const string todoId) {
     setConsoleColor(FOREGROUND_RED);
     cout << "Error: Todo not found with that ID:" << todoId << endl;
     setConsoleColor(FOREGROUND_INTENSITY);
-    return crow::response(404, "Not found");
+    return {404, "Not found"};
 }
 
 pair<string, string> separateString(const string &str, char delimiter) {

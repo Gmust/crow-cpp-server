@@ -36,6 +36,15 @@ int main() {
         return page;
     });
 
+    CROW_ROUTE(app, "/get-todo-info/<string>")
+            .methods("GET"_method)
+                    ([](const crow::request &req, crow::response &res, const std::string &path) {
+                        crow::response result = getTodoInfo(path, req);
+                        res = std::move(result);
+                        res.end();
+                    });
+
+
     CROW_ROUTE(app, "/add")
             .methods("POST"_method)(addTodoController);
 
@@ -51,10 +60,6 @@ int main() {
     CROW_ROUTE(app, "/update-todo-task")
             .methods("PUT"_method)(changeTodoTask);
 
-    CROW_ROUTE(app, "/get-todo-info/<string>")
-            ([](const crow::request &req, crow::response &res, const std::string &id) {
-                getTodoInfo(id, req);
-            });
 
     setConsoleColor(FOREGROUND_GREEN);
     cout << "Server launched successfully!" << endl;

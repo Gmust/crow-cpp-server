@@ -33,9 +33,9 @@ crow::response addTodoController(const crow::request &req) {
 }
 
 crow::response getTodosController(const crow::request &req) {
+    auto username = req.url_params.get("username");
 
-    auto json = crow::json::load(req.body);
-    std::vector<Todo> todos = readTodosFromFile(json["username"].s());
+    std::vector<Todo> todos = readTodosFromFile(username);
 
     crow::json::wvalue::list todosResponse;
     for (auto &todo: todos) {
@@ -57,22 +57,24 @@ crow::response deleteTodoController(const crow::request &req) {
     }
 
     string todoId = json["id"].s();
-    vector<Todo> todos = readTodosFromFile(json["username"].s());
+    string username = json["username"].s();
+    vector<Todo> todos = readTodosFromFile(username);
 
-    auto todoToRemove = remove_if(todos.begin(), todos.end(), [todoId](Todo &todo) {
+
+    auto todoToRemove = remove_if(todos.begin(), todos.end(), [todoId](const Todo &todo) {
         return todo.id == todoId;
     });
 
     if (todoToRemove != todos.end()) {
         todos.erase(todoToRemove, todos.end());
-        ofstream file("todos.txt");
+        ofstream file("users/" + username + "/todos.txt");
         if (file.is_open()) {
-            for (auto &todo: todos) {
+            for (const auto &todo: todos) {
                 file << quoted(todo.id) << " " << quoted(todo.task) << " " << todo.status << endl;
             }
             file.close();
             setConsoleColor(FOREGROUND_GREEN);
-            cout << "TODO successfully deleted" << todoId << endl;
+            cout << "TODO successfully deleted: " << todoId << endl;
             setConsoleColor(FOREGROUND_INTENSITY);
             return {200, "Todo deleted successfully"};
         } else {
@@ -98,7 +100,8 @@ crow::response changeTodoStatus(const crow::request &req) {
     string todoId = json["id"].s();
     bool todoStatus = json["status"].b();
 
-    vector<Todo> todos = readTodosFromFile(json["username"].s());
+    string username = json["username"].s();
+    vector<Todo> todos = readTodosFromFile(username);
 
     auto existingTodo = find_if(todos.begin(), todos.end(), [todoId](const Todo &todo) {
         return todo.id == todoId;
@@ -109,7 +112,7 @@ crow::response changeTodoStatus(const crow::request &req) {
 
         existingTodo->status = todoStatus;
 
-        ofstream file("todos.txt", ios::trunc);
+        ofstream file("users/" + username + "/todos.txt", ios::trunc);
         if (file.is_open()) {
             for (const auto &todo: todos) {
                 file << quoted(todo.id) << " " << quoted(todo.task) << " " << todo.status << endl;
@@ -143,7 +146,8 @@ crow::response changeTodoTask(const crow::request &req) {
     string todoId = json["id"].s();
     string newTodoTask = json["task"].s();
 
-    vector<Todo> todos = readTodosFromFile(json["username"].s());
+    string username = json["username"].s();
+    vector<Todo> todos = readTodosFromFile(username);
 
     auto existingTodo = find_if(todos.begin(), todos.end(), [todoId](const Todo &todo) {
         return todo.id == todoId;
@@ -154,7 +158,7 @@ crow::response changeTodoTask(const crow::request &req) {
 
         existingTodo->status = existingTodo->status;
 
-        ofstream file("todos.txt", ios::trunc);
+        ofstream file("users/" + username + "/todos.txt", ios::trunc);
         if (file.is_open()) {
             for (const auto &todo: todos) {
                 file << quoted(todo.id) << " " << quoted(todo.task) << " " << todo.status << endl;
@@ -175,13 +179,15 @@ crow::response changeTodoTask(const crow::request &req) {
     }
 }
 
-crow::response getTodoInfo(string id, const crow::request &req) {
-    auto json = crow::json::load(req.body);
+crow::response getTodoInfo(string path, const crow::request &req) {
 
-    vector<Todo> todos = readTodosFromFile(json["username"].s());
+    auto [id, username] = separateString(path, '-');
+
+    vector<Todo> todos = readTodosFromFile(username);
     auto todo = find_if(todos.begin(), todos.end(), [id](const Todo &todo) {
         return todo.id == id;
     });
+
 
     if (todo != todos.end()) {
         crow::json::wvalue todoJson;
@@ -195,6 +201,7 @@ crow::response getTodoInfo(string id, const crow::request &req) {
     }
 }
 
+
 crow::response loginUser(const crow::request &req) {
     string authHeader = req.get_header_value("Authorization");
     string userCredits = authHeader.substr(6);
@@ -205,28 +212,28 @@ crow::response loginUser(const crow::request &req) {
     string userFolder = "users/" + username;
     ifstream userInfoFile(userFolder + "/info.txt");
 
-    if (!userInfoFile) {
+    if (userInfoFile.is_open()) {
+        string userId, userStoredEncodedInfo;
+        getline(userInfoFile, userId);
+        getline(userInfoFile, userStoredEncodedInfo);
+
+        string userStoredDecodedInfo = crow::utility::base64decode(userStoredEncodedInfo);
+        auto [storedUsername, storedPassword] = separateString(userStoredDecodedInfo, ':');
+
+        if (username == storedUsername && password == storedPassword) {
+            crow::json::wvalue userJson;
+            userJson["username"] = storedUsername;
+            userJson["message"] = "Authentificated";
+
+            return crow::response(200, userJson);
+        } else {
+            return crow::response(401, "Invalid credentials");
+        }
+    } else {
         setConsoleColor(FOREGROUND_RED);
         cout << "Error: Unable to open user file" << endl;
         setConsoleColor(FOREGROUND_INTENSITY);
         return {500, "Internal error"};
-    }
-
-    string userId, userStoredEncodedInfo;
-    getline(userInfoFile, userId);
-    getline(userInfoFile, userStoredEncodedInfo);
-
-    string userStoredDecodedInfo = crow::utility::base64decode(userStoredEncodedInfo);
-    auto [storedUsername, storedPassword] = separateString(userStoredDecodedInfo, ':');
-
-    if (username == storedUsername && password == storedPassword) {
-        crow::json::wvalue userJson;
-        userJson["username"] = storedUsername;
-        userJson["message"] = "Authentificated";
-
-        return crow::response(200, userJson);
-    } else {
-        return crow::response(401, "Invalid credentials");
     }
 }
 

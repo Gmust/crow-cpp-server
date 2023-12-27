@@ -1,4 +1,10 @@
 let isEditMode = false;
+const username = localStorage.getItem('username');
+
+if (!username) {
+    window.location.href = '/';
+}
+
 const toggleEditMod = () => {
     isEditMode = !isEditMode;
     const taskList = document.getElementById('taskList');
@@ -14,7 +20,7 @@ const toggleEditMod = () => {
 }
 
 const makeTaskEditable = async (id) => {
-    const response = await fetch(`http://localhost:18080/get-todo-info/${id}`, {
+    const response = await fetch(`http://localhost:18080/get-todo-info/${id}-${username}`, {
         method: "GET",
     });
     const todo = await response.json();
@@ -34,7 +40,8 @@ const updateTodoTask = async () => {
 
     const data = {
         id: id,
-        task: taskInput.value
+        task: taskInput.value,
+        username: username
     }
 
     const response = await fetch('http://localhost:18080/update-todo-task', {
@@ -64,7 +71,8 @@ const updateTodoStatus = async (id) => {
 
     const data = {
         id,
-        status
+        status,
+        username
     }
 
     const response = await fetch('http://localhost:18080/update-todo-status', {
@@ -87,12 +95,18 @@ const updateTodoStatus = async (id) => {
 const deleteTodo = async (id) => {
     const errorElement = document.getElementById('error');
     errorElement.textContent = '';
+
+    const data = {
+        id,
+        username
+    }
+
     const response = await fetch('http://localhost:18080/delete-todo', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({id})
+        body: JSON.stringify(data)
     })
     if (response.ok) {
         showSnackbar("Task successfully deleted!");
@@ -105,11 +119,11 @@ const deleteTodo = async (id) => {
 
 const fetchTodos = async () => {
     const tasksList = document.getElementById('taskList'); // Corrected ID
-    const response = await fetch('http://localhost:18080/get-todos', {
+    const response = await fetch(`http://localhost:18080/get-todos?username=${username}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
     });
     const todos = await response.json();
     tasksList.innerHTML = todos.map(todo =>
@@ -144,7 +158,8 @@ const addTask = async () => {
     errorElement.textContent = '';
     const data = {
         task: taskInput.value,
-        status: false
+        status: false,
+        username
     };
     try {
         const response = await fetch('http://localhost:18080/add', {

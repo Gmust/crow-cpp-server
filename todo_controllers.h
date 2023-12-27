@@ -17,7 +17,7 @@ crow::response changeTodoStatus(const crow::request &req);
 
 crow::response changeTodoTask(const crow::request &req);
 
-crow::response getTodoInfo(string id, const crow::request &req);
+crow::response getTodoInfo(string path, const crow::request &req);
 
 crow::response loginUser(const crow::request &req);
 
